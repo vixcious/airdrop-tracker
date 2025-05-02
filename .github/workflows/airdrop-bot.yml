@@ -1,0 +1,28 @@
+name: Run Airdrop Reminder Bot
+
+on:
+  schedule:
+    - cron: '0 9 * * *' # ⏰ Setiap jam 9 pagi UTC (16.00 WIB)
+  workflow_dispatch:     # Bisa juga dijalankan manual via GitHub UI
+
+jobs:
+  run-bot:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run Reminder Bot
+        env:
+          MONGODB_URI: ${{ secrets.MONGODB_URI }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+        run: node telegram-bot/bot.js
